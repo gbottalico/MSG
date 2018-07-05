@@ -1,0 +1,31 @@
+CREATE DATABASE IF NOT EXISTS mgs;
+USE mgs;
+
+CREATE TABLE IF NOT EXISTS place(
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(50) NOT NULL,
+  address TEXT DEFAULT NULL,
+  location VARCHAR(150) DEFAULT NULL,
+  postal_no VARCHAR(20) DEFAULT NULL,
+  email TEXT DEFAULT NULL,
+  telephone VARCHAR(15) DEFAULT NULL,
+  UNIQUE(name),
+  PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS visit(
+  id INT NOT NULL AUTO_INCREMENT,
+  badge_no VARCHAR(50) DEFAULT NULL,
+  host_name VARCHAR(150) DEFAULT NULL,
+  guest_name VARCHAR(150) NOT NULL,
+  guest_document_type VARCHAR(50) DEFAULT NULL,
+  guest_document_no VARCHAR(50) DEFAULT NULL,
+  entrance_date date DEFAULT NULL,
+  entrance_time time DEFAULT NULL,
+  leaving_time time DEFAULT NULL,
+  place_id INT DEFAULT NULL,
+  PRIMARY KEY(id),
+  FOREIGN KEY (place_id) REFERENCES place(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
