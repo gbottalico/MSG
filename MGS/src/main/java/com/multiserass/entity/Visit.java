@@ -41,6 +41,8 @@ public class Visit implements Serializable{
 	private LocalTime entranceTime;
 	@Column(name="leaving_time")
 	private LocalTime leavingTime;
+	@Column(name="social_reason")
+	private String socialReason;
 	@ManyToOne
 	@JoinColumn(name = "place_id")
 	private Place place;
@@ -108,6 +110,12 @@ public class Visit implements Serializable{
 	public void setLeavingTime(LocalTime leavingTime) {
 		this.leavingTime = leavingTime;
 	}
+	public String getSocialReason() {
+		return socialReason;
+	}
+	public void setSocialReason(String socialReason) {
+		this.socialReason = socialReason;
+	}
 	public Place getPlace() {
 		return place;
 	}
@@ -125,6 +133,7 @@ public class Visit implements Serializable{
 		newVisit.setHostName(this.getHostName());
 		newVisit.setLeavingTime(this.getLeavingTime());
 		newVisit.setPlace(this.getPlace());
+		newVisit.setSocialReason(this.socialReason);
 		return newVisit;
 	}
 	@Override
