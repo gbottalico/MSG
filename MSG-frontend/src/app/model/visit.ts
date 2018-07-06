@@ -1,3 +1,4 @@
+import { Time } from '@angular/common'
 import { Place } from './place';
 
 export class Visit {
@@ -11,4 +12,5 @@ export class Visit {
   leavingDate: string;
   entranceTime: string;
   leavingTime: string;
+  socialReason: string;
 };
