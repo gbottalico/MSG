@@ -34,8 +34,10 @@ public class VisitService implements IVisitService {
 			dates.forEach(date -> {
 				Visit newVisit = visit.clone();
 				newVisit.setEntranceDate(date);
-				//TODO set the newVisit.entranceTime to 00:01 till the last one
-				//TODO set the newVisit.leavingTime to 23:59 till the last one
+				newVisit.setLeavingTime(null);
+				if(!visit.getEntranceDate().isBefore(newVisit.getEntranceDate())) {
+					newVisit.setEntranceTime(null);
+				}
 				visitDAO.addVisit(newVisit);
 			});
 		} else {
@@ -57,5 +59,10 @@ public class VisitService implements IVisitService {
 	@Override
 	public List<Visit> getAllVisitByPlaceAndName(int placeId, String name) {
 		return visitDAO.getAllVisitByPlaceAndName(placeId, name);
+	}
+
+	@Override
+	public List<Visit> getAllVisitByPlaceAndDate(Integer placeId, LocalDate date) {
+		return visitDAO.getAllVisitByPlaceAndDate(placeId, date);
 	}
 }

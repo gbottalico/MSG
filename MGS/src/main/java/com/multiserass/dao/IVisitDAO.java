@@ -1,5 +1,6 @@
 package com.multiserass.dao;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.multiserass.entity.Visit;
@@ -13,4 +14,5 @@ public interface IVisitDAO {
     void deleteVisit(int visitId);
     
     List<Visit> getAllVisitByPlaceAndName(int placeId, String name);
+	List<Visit> getAllVisitByPlaceAndDate(Integer placeId, LocalDate date);
 }

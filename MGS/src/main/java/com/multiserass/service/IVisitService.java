@@ -1,5 +1,6 @@
 package com.multiserass.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.multiserass.entity.Visit;
@@ -12,4 +13,5 @@ public interface IVisitService {
     void deleteVisit(int visitId);
     
     List<Visit> getAllVisitByPlaceAndName(int placeId, String name);
+	List<Visit> getAllVisitByPlaceAndDate(Integer placeId, LocalDate date);
 }

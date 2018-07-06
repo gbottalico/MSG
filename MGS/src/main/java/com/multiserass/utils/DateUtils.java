@@ -2,6 +2,7 @@ package com.multiserass.utils;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
@@ -20,5 +21,9 @@ public enum DateUtils {
 	public static LocalDate toLocalDate(Date date) {
 		Date lDate = new Date(date.getTime());
 		return lDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	}
+	public static String toString(LocalDate date, String format) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+		return date.format(formatter);
 	}
 }

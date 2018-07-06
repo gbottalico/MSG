@@ -1,5 +1,6 @@
 package com.multiserass.dao;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.multiserass.entity.Visit;
+import com.multiserass.utils.DateUtils;
 
 @Transactional
 @Repository
@@ -44,6 +46,7 @@ public class VisitDAO implements IVisitDAO {
 		oldVisit.setGuestName(visit.getGuestName());
 		oldVisit.setHostName(visit.getHostName());
 		oldVisit.setLeavingTime(visit.getLeavingTime());
+		oldVisit.setSocialReason(visit.getSocialReason());
 		oldVisit.setPlace(visit.getPlace());
 		entityManager.flush();
 	}
@@ -61,6 +64,17 @@ public class VisitDAO implements IVisitDAO {
 				+ "WHERE visit.place.id="+placeId+" "
 				+ "AND visit.hostName LIKE '%"+formattedName+"%' "
 				+ "OR visit.guestName LIKE '%"+formattedName+"%' "
+				+ "ORDER BY visit.id";
+		return (List<Visit>) entityManager.createQuery(hql).getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Visit> getAllVisitByPlaceAndDate(Integer placeId, LocalDate date) {
+		String dateStr = DateUtils.toString(date, "yyyy-MM-dd");
+		String hql = "FROM Visit as visit "
+				+ "WHERE visit.place.id="+placeId+" "
+				+ "AND visit.entranceDate= '"+date+"' "
 				+ "ORDER BY visit.id";
 		return (List<Visit>) entityManager.createQuery(hql).getResultList();
 	}
