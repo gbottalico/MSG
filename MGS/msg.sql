@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS visit(
   entrance_date date DEFAULT NULL,
   entrance_time time DEFAULT NULL,
   leaving_time time DEFAULT NULL,
+  social_reason text DEFAULT NULL,
   place_id INT DEFAULT NULL,
   PRIMARY KEY(id),
   FOREIGN KEY (place_id) REFERENCES place(id)
