@@ -29,7 +29,7 @@ public class VisitService implements IVisitService {
 
 	@Override
 	public boolean addVisit(Visit visit) {
-		if(visit.getLeavingDate()!=null) {
+		if(visit.getLeavingDate()!=null && visit.getLeavingDate().isAfter(visit.getEntranceDate())) {
 			List<LocalDate> dates = DateUtils.getDatesInPeriod(visit.getEntranceDate(), visit.getLeavingDate().plusDays(1));
 			dates.forEach(date -> {
 				Visit newVisit = visit.clone();
