@@ -4,6 +4,7 @@ import { NgbDatepickerI18n, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { I18n, CustomDatepickerI18n } from '../data/datepicker_IT';
 import { DatepickerService } from '../datepicker.service';
 
+
 const now = new Date();
 
 @Component({

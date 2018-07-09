@@ -1,8 +1,8 @@
 <div class="row d-flex">
   <div class="col-sm-9">
-    <div class="input-group-append">
-      <input #searchBox type="text" class="form-control" placeholder="Cerca nome.." (keyup)="search(searchBox.value)">
-      <button class="plus-button btn btn-sm btn-outline-success mr-2" (click)="showVisitForm()"><span class="glyphicon glyphicon-plus"></span> </button>
+    <div class="input-group">
+      <input #searchBox type="text" class="form-control" placeholder="Cerca nome.." (keyup)="search(searchBox.value)" style="height: 40px">
+      <app-new-visit></app-new-visit>
     </div>
   </div>
 </div>
@@ -20,7 +20,7 @@
       <th scope="col">Orario Uscita</th>
       <th>
         <div class="dropdown">
-          <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             {{placeLabel}}
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
@@ -41,11 +41,12 @@
       <td>{{visit.entranceDate | date : "dd-MM-yyyy"}}</td>
       <td>{{visit.entranceTime}}</td>
       <td>{{visit.leavingTime}}</td>
-      <td colspan="2">
-        <button class="btn btn-sm btn-outline-success mr-2" (click)="setVisitForm(visit)"> <span class="glyphicon glyphicon-repeat"></span> </button>
-        <button class="btn btn-sm btn-outline-warning mr-2" > <span class="glyphicon glyphicon-pencil"></span> </button>
-        <button class="btn btn-sm btn-outline-danger mr-2" (click)="deleteVisit(visit)"> <span class="glyphicon glyphicon-trash"></span> </button>
+      <td>
+        <button (click)="setVisitForm(visit)" class="btn btn-sm btn-outline-primary mr-2"><span class="glyphicon glyphicon-repeat"></span></button>
+        <button (click)="editVisit(visit)" class="btn btn-sm btn-outline-warning mr-2"><span class="glyphicon glyphicon-pencil"></span></button>
+        <button [disabled]="disableDelete"  (click)="deleteVisit(visit)" class="btn btn-sm btn-outline-danger mr-2"><span class="glyphicon glyphicon-trash"></span></button>
       </td>
     </tr>
   </tbody>
 </table>
+<app-edit-visit></app-edit-visit>

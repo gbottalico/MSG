@@ -8,6 +8,7 @@ import { VisitService } from '../visit.service';
 import { PlaceService } from '../place.service';
 import { DatepickerService } from '../datepicker.service';
 import { NewVisitService } from '../new-visit.service';
+import { EditVisitService } from '../edit-visit.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,23 +16,30 @@ import { NewVisitService } from '../new-visit.service';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  showNewVisit:boolean=false;
+  disableDelete:boolean;
   places: Place[] = []
   currentPlace: Place;
-  placeLabel: string = "Selezionare Luogo";
+  placeLabel:string;
   allVisits: Visit[] = [];
   visits: Visit[] = [];
   date: Date = new Date();
 
   constructor(
     public newVisitService: NewVisitService,
+    public editVisitService: EditVisitService,
     private visitService: VisitService,
     private placeService: PlaceService,
     private datepickerService: DatepickerService
   ) { }
 
   ngOnInit() {
+    this.disableDelete=false;
+    this.placeLabel="Selezionare Luogo";
     this.getAllPlaces();
+    this.placeService.getStoredCurrentPlace().subscribe(place=>{
+      this.setCurrentPlace(place);
+    });
+
     this.datepickerService.change.subscribe(date => {
       this.date = date;
       this.getVisitsFromDate()
@@ -56,7 +64,10 @@ export class DashboardComponent implements OnInit {
       this.date = new Date();
     }
     if(this.currentPlace!=null){
-      this.visitService.getVisitsByDate(this.currentPlace.id,this.date).subscribe( visits => this.visits = this.allVisits = visits);
+      this.visitService.getVisitsByDate(this.currentPlace.id,this.date)
+        .subscribe( visits => {
+          this.visits = this.allVisits = visits;
+        });
     }
   }
   setCurrentPlace(place: Place){
@@ -68,10 +79,22 @@ export class DashboardComponent implements OnInit {
   getAllPlaces():void {
     this.placeService.getPlaces().subscribe( places => this.places = places);
   }
-  getAllVisits():void {
-    this.visitService.getVisits().subscribe( visits => this.visits = this.allVisits = visits);
+  editVisit(visit: Visit):void {
+    this.editVisitService.set(visit);
+    this.editVisitService.show();
   }
+
   deleteVisit(visit: Visit):void {
-    this.visitService.deleteVisit(visit).subscribe(visit=>this.visits.splice(this.visits.indexOf(visit), this.currentPlace.id));
+    this.visitService.deleteVisit(visit).subscribe(
+        result=>{
+          this.visits.splice(this.visits.indexOf(result), this.currentPlace.id);
+        },
+        error => {
+          console.log(error);
+        },
+        () => {
+          this.disableDelete=false;
+        }
+     );
   }
 }
