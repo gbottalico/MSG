@@ -1,0 +1,128 @@
+<!-- <button class="plus-button btn btn-sm btn-outline-success mr-2" ><span class="glyphicon glyphicon-plus"></span> </button> -->
+
+<ng-template #content>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Modifica Visita</h4>
+  </div>
+  <div class="modal-body">
+    <form #visitForm="ngForm">
+      <div [hidden]="visitForm.submitted">
+        <div class="cross-validation" [class.cross-validation-error]="visitForm.errors?.identityRevealed && (visitForm.touched || visitForm.dirty)">
+          <div class="form-group">
+            <input id="badgeNo" name="badgeNo" class="form-control"
+                   required minlength="2"
+                   [(ngModel)]="visit.badgeNo" #badgeNo="ngModel"
+                   placeholder="Numero Badge..">
+<!--  -->
+            <div *ngIf="badgeNo.invalid && (badgeNo.dirty || badgeNo.touched)" class="alert alert-danger">
+              <div *ngIf="badgeNo.errors.required">Numero badge obbligatorio</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <form class="form-inline">
+              <div class="input-group">
+                <input class="form-control" placeholder="Data entrata.."
+                       name="dp" [(ngModel)]="entranceDate" ngbDatepicker #d="ngbDatepicker"
+                       (click)="assignEntranceDate()">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="form-group">
+            <input id="guestName" name="guestName" class="form-control"
+                   required appForbidden=".*[-\/\\^%$*+£?&.()|[\]{}].*"
+                   [(ngModel)]="visit.guestName" #guestName="ngModel"
+                   placeholder="Persona visitata..">
+
+            <div *ngIf="guestName.invalid && (guestName.dirty || guestName.touched)" class="alert alert-danger">
+              <div *ngIf="guestName.errors.required">Nome ospite obbligatorio</div>
+              <div *ngIf="guestName.errors.forbidden">Un nome non può contenere caratteri speciali</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <input id="hostName" name="hostName" class="form-control"
+                   required appForbidden=".*[-\/\\^%$*+£?&.()|[\]{}].*"
+                   [(ngModel)]="visit.hostName" #hostName="ngModel"
+                   placeholder="Persona da visitare..">
+
+            <div *ngIf="hostName.invalid && (hostName.dirty || hostName.touched)" class="alert alert-danger">
+              <div *ngIf="hostName.errors.required">Nome ospitante obbligatorio</div>
+              <div *ngIf="hostName.errors.forbidden">Un nome non può contenere caratteri speciali</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <input id="socialReason" name="socialReason" class="form-control"
+                   required appForbidden=".*[-\/\\^%$*+£?&.()|[\]{}].*"
+                   [(ngModel)]="visit.socialReason" #socialReason="ngModel"
+                   placeholder="Ragione sociale..">
+
+            <div *ngIf="socialReason.invalid && (socialReason.dirty || socialReason.touched)" class="alert alert-danger">
+              <div *ngIf="socialReason.errors.required">Ragione sociale obbligatora</div>
+              <div *ngIf="socialReason.errors.forbidden">Non può contenere caratteri speciali</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm">
+                <input id="entranceTime" name="entranceTime" class="form-control"
+                       required minlength="5" appForbidden="^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"
+                       [(ngModel)]="visit.entranceTime" #entranceTime="ngModel"
+                       placeholder="Orario entrata..">
+                <div *ngIf="entranceTime.invalid && (entranceTime.dirty || entranceTime.touched)" class="alert alert-danger">
+                 <div *ngIf="entranceTime.errors.minlength">L'orario deve essere nel formato HH:MM</div>
+                 <div *ngIf="entranceTime.errors.forbidden">L'orario deve essere nel formato HH:MM</div>
+                </div>
+              </div>
+              <div class="col-sm">
+                <input id="leavingTime" name="leavingTime" class="form-control"
+                       required minlength="5" appForbidden="^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"
+                       [(ngModel)]="visit.leavingTime" #leavingTime="ngModel"
+                       placeholder="Orario uscita..">
+                <div *ngIf="leavingTime.invalid && (leavingTime.dirty || leavingTime.touched)" class="alert alert-danger">
+                  <div *ngIf="leavingTime.errors.minlength">L'orario deve essere nel formato HH:MM</div>
+                  <div *ngIf="leavingTime.errors.forbidden">L'orario deve essere nel formato HH:MM</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="row">
+              <div class="col-sm">
+                <div class="dropdown">
+                  <button class="btn btn-primary dropdown-toggle form-control" type="button" id="dropdownMenuButton"
+                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{documentLabel}}
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+                    <a *ngFor="let d of documentTypes" class="dropdown-item"
+                            (click)="setDocumentType(d)">{{d}}</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm">
+                <input *ngIf="visit.guestDocumentType" id="guestDocumentNo" name="guestDocumentNo" class="form-control"
+                       [(ngModel)]="visit.guestDocumentNo" #guestDocumentNo="ngModel"
+                       placeholder="Numero documento..">
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="plus-button btn btn-sm btn-outline-primary mr-2"
+                  (click)="editVisit()" [disabled]="visitForm.invalid">Applica Modifiche</button>
+        </div>
+      </div>
+      <div class="submitted-message" *ngIf="visitForm.submitted">
+        <p>Visita modificata con successo</p>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<div *ngIf="show"  class="container">
+
+</div>

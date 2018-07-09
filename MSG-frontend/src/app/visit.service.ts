@@ -50,10 +50,10 @@ export class VisitService {
       );
   }
 
-  addVisit (visit: Visit): Observable<Visit> {
+  addVisit (visit: Visit): Observable<any> {
     return this.http.post<Visit>(this.visitUrl, visit, httpOptions)
       .pipe(
-        tap((visit: Visit) => this.log(`added visit w/ id=${visit.id}`)),
+        tap(_ => this.log(`added visit`)),
         catchError(this.handleError<Visit>(`addVisit`))
       );
   }
@@ -63,8 +63,7 @@ export class VisitService {
     const url = `${this.visitUrl}/${id}`;
 
     return this.http.delete<Visit>(url, httpOptions).pipe(
-      tap(_ => this.log(`deleted visit id=${id}`)),
-      catchError(this.handleError<Visit>('deleteVisit'))
+      tap(_ => this.log(`deleted visit id=${id}`))
     );
   }
 
