@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { CookieService } from 'ngx-cookie-service';
 
 import { Place } from './model/place';
 import { BE_URL } from './data/be_url';
@@ -16,13 +17,18 @@ const httpOptions = {
 export class PlaceService {
   private placeUrl = BE_URL+'/api/place';
   private placesUrl = BE_URL+'/api/places';
-  currentPlace: Place;
-  
+  private currentPlace:Place;
+
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private cookieService: CookieService
   ) { }
   setCurrentPlace(place: Place):void {
+    this.cookieService.set( 'msg.currentPlace', ""+place.id);
     this.currentPlace = place;
+  }
+  getStoredCurrentPlace():Observable<Place> {
+    return this.getPlace(+this.cookieService.get('msg.currentPlace'));
   }
   getCurrentPlace():Place {
     return this.currentPlace;
@@ -44,7 +50,7 @@ export class PlaceService {
       );
   }
 
-  updatePlace (place: Place): Observable<any> {
+  updatePlace(place: Place): Observable<any> {
     return this.http.put(this.placeUrl, place, httpOptions)
       .pipe(
         tap(_ => this.log(`updated place id=$=${place.id}`)),
@@ -52,7 +58,7 @@ export class PlaceService {
       );
   }
 
-  addPlace (place: Place): Observable<Place> {
+  addPlace(place: Place): Observable<Place> {
     return this.http.post<Place>(this.placeUrl, place, httpOptions)
       .pipe(
         tap((place: Place) => this.log(`added place w/ id=${place.id}`)),
@@ -60,7 +66,7 @@ export class PlaceService {
       );
   }
 
-  deletePlace (place: Place | number): Observable<Place> {
+  deletePlace(place: Place | number): Observable<Place> {
     const id = typeof place === 'number' ? place : place.id;
     const url = `${this.placeUrl}/${id}`;
 
