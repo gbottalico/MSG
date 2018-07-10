@@ -3,7 +3,7 @@ import { NgbDatepickerI18n, NgbDateStruct, NgbDateParserFormatter } from '@ng-bo
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 import { I18n, CustomDatepickerI18n } from '../data/datepicker_IT';
-import { EditVisitService } from '../edit-visit.service';
+import { VisitEventService } from '../visit-event.service';
 import { VisitService } from '../visit.service';
 import { PlaceService } from '../place.service';
 import { Visit } from '../model/visit';
@@ -28,7 +28,7 @@ export class EditVisitComponent implements OnInit {
   @ViewChild('content') private content;
 
   constructor(
-    private editVisitService: EditVisitService,
+    private visitEventService: VisitEventService,
     private visitService: VisitService,
     private placeService: PlaceService,
     private formatter: NgbDateParserFormatter,
@@ -39,12 +39,12 @@ export class EditVisitComponent implements OnInit {
     this.visit = new Visit();
     this.resetDates();
 
-    this.editVisitService.changeForm.subscribe(show => {
+    this.visitEventService.showEditFormEvent.subscribe(show => {
       this.open(this.content);
       // this.modalRef = this.modalService.show(this.template);
     });
 
-    this.editVisitService.changeVisit.subscribe(visit => {
+    this.visitEventService.editVisitChangedEvent.subscribe(visit => {
       this.visit = visit;
       this.showLeavingDate=false;
       if(visit.guestDocumentType!='' && visit.guestDocumentType!=null){

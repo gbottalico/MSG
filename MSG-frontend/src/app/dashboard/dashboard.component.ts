@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { Observable, Subject, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
@@ -7,8 +8,7 @@ import { Place } from '../model/place';
 import { VisitService } from '../visit.service';
 import { PlaceService } from '../place.service';
 import { DatepickerService } from '../datepicker.service';
-import { NewVisitService } from '../new-visit.service';
-import { EditVisitService } from '../edit-visit.service';
+import { VisitEventService } from '../visit-event.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,11 +25,11 @@ export class DashboardComponent implements OnInit {
   date: Date = new Date();
 
   constructor(
-    public newVisitService: NewVisitService,
-    public editVisitService: EditVisitService,
+    public visitEventService: VisitEventService,
     private visitService: VisitService,
     private placeService: PlaceService,
-    private datepickerService: DatepickerService
+    private datepickerService: DatepickerService,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit() {
@@ -44,13 +44,21 @@ export class DashboardComponent implements OnInit {
       this.date = date;
       this.getVisitsFromDate()
     });
+
+    this.visitEventService.newVisitCreatedEvent.subscribe(visit=>{
+      console.log(this.date);
+      console.log(visit.entranceDate);
+      if(visit.entranceDate === this.datePipe.transform(this.date, 'yyyy-MM-dd')){
+        this.visits.push(visit);
+      }
+    });
   }
   setVisitForm(visit:Visit):void {
-    this.newVisitService.show();
-    this.newVisitService.set(visit);
+    this.visitEventService.showNewForm();
+    this.visitEventService.setNewModel(visit);
   }
   showVisitForm():void {
-    this.newVisitService.show();
+    this.visitEventService.showNewForm();
   }
   search(term: string):void {
     this.visits = this.allVisits
@@ -80,8 +88,8 @@ export class DashboardComponent implements OnInit {
     this.placeService.getPlaces().subscribe( places => this.places = places);
   }
   editVisit(visit: Visit):void {
-    this.editVisitService.set(visit);
-    this.editVisitService.show();
+    this.visitEventService.setEditModel(visit);
+    this.visitEventService.showEditForm();
   }
 
   deleteVisit(visit: Visit):void {
@@ -90,6 +98,7 @@ export class DashboardComponent implements OnInit {
           this.visits.splice(this.visits.indexOf(result), this.currentPlace.id);
         },
         error => {
+          this.visits.splice(this.visits.indexOf(visit), this.currentPlace.id);
           console.log(error);
         },
         () => {

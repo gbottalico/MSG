@@ -3,7 +3,7 @@ import { NgbDatepickerI18n, NgbDateStruct, NgbDateParserFormatter } from '@ng-bo
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
 import { I18n, CustomDatepickerI18n } from '../data/datepicker_IT';
-import { NewVisitService } from '../new-visit.service';
+import { VisitEventService } from '../visit-event.service';
 import { VisitService } from '../visit.service';
 import { PlaceService } from '../place.service';
 import { Visit } from '../model/visit';
@@ -29,7 +29,7 @@ export class NewVisitComponent implements OnInit {
   @ViewChild('content') private content;
 
   constructor(
-    private newVisitService: NewVisitService,
+    private visitEventService: VisitEventService,
     private visitService: VisitService,
     private placeService: PlaceService,
     private formatter: NgbDateParserFormatter,
@@ -40,13 +40,13 @@ export class NewVisitComponent implements OnInit {
     this.visit = new Visit();
     this.resetDates();
 
-    this.newVisitService.changeForm.subscribe(show => {
+    this.visitEventService.showNewFormEvent.subscribe(show => {
       this.resetVisit();
       this.openEdit(this.content);
       // this.modalRef = this.modalService.show(this.template);
     });
 
-    this.newVisitService.changeVisit.subscribe(visit => {
+    this.visitEventService.newVisitChangedEvent.subscribe(visit => {
       this.visit.guestName = visit.guestName;
       this.visit.hostName = visit.hostName;
       this.visit.guestDocumentType = visit.guestDocumentType;
@@ -123,5 +123,6 @@ export class NewVisitComponent implements OnInit {
     this.visit.entranceDate = this.formatter.format(this.entranceDate);
     this.visit.leavingDate = this.formatter.format(this.leavingDate);
     this.visitService.addVisit(this.visit).subscribe();
+    this.visitEventService.visitCreated(this.visit);
   }
 }
