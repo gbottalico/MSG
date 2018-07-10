@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name="visit")
 public class Visit implements Serializable{
@@ -33,12 +35,16 @@ public class Visit implements Serializable{
 	private String guestDocumentType;
 	@Column(name="guest_document_no")
 	private String guestDocumentNo;
+	@JsonFormat(pattern = "dd-MM-yyyy")
 	@Column(name="entrance_date")
 	private LocalDate entranceDate;
+	@JsonFormat(pattern = "dd-MM-yyyy")
 	@Transient
 	private LocalDate leavingDate;
+	@JsonFormat(pattern = "HH:mm")
 	@Column(name="entrance_time")
 	private LocalTime entranceTime;
+	@JsonFormat(pattern = "HH:mm")
 	@Column(name="leaving_time")
 	private LocalTime leavingTime;
 	@Column(name="social_reason")

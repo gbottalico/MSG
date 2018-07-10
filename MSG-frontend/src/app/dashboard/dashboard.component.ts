@@ -46,9 +46,7 @@ export class DashboardComponent implements OnInit {
     });
 
     this.visitEventService.newVisitCreatedEvent.subscribe(visit=>{
-      console.log(this.date);
-      console.log(visit.entranceDate);
-      if(visit.entranceDate === this.datePipe.transform(this.date, 'yyyy-MM-dd')){
+      if(visit.entranceDate === this.datePipe.transform(this.date, 'dd-MM-yyyy')){
         this.visits.push(visit);
       }
     });
@@ -95,7 +93,7 @@ export class DashboardComponent implements OnInit {
   deleteVisit(visit: Visit):void {
     this.visitService.deleteVisit(visit).subscribe(
         result=>{
-          this.visits.splice(this.visits.indexOf(result), this.currentPlace.id);
+          this.visits.splice(this.visits.indexOf(visit), this.currentPlace.id);
         },
         error => {
           this.visits.splice(this.visits.indexOf(visit), this.currentPlace.id);

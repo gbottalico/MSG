@@ -1,6 +1,7 @@
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { NgbDatepickerI18n, NgbDateStruct, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateITParserFormatter } from "../data/ngb-date-it-parser-formatter"
 
 import { I18n, CustomDatepickerI18n } from '../data/datepicker_IT';
 import { VisitEventService } from '../visit-event.service';
@@ -14,7 +15,11 @@ const now = new Date();
   selector: 'app-new-visit',
   templateUrl: './new-visit.component.html',
   styleUrls: ['./new-visit.component.css'],
-  providers: [I18n, { provide: NgbDatepickerI18n, useClass: CustomDatepickerI18n }]
+  providers: [
+              I18n,
+              { provide: NgbDateParserFormatter, useClass: NgbDateITParserFormatter },
+              { provide: NgbDatepickerI18n, useClass: CustomDatepickerI18n }
+            ]
 })
 export class NewVisitComponent implements OnInit {
   private showLeavingDate:boolean = false;
@@ -43,7 +48,6 @@ export class NewVisitComponent implements OnInit {
     this.visitEventService.showNewFormEvent.subscribe(show => {
       this.resetVisit();
       this.openEdit(this.content);
-      // this.modalRef = this.modalService.show(this.template);
     });
 
     this.visitEventService.newVisitChangedEvent.subscribe(visit => {
@@ -112,11 +116,9 @@ export class NewVisitComponent implements OnInit {
   }
   public assignLeavinDate():void{
     this.visit.leavingDate = this.formatter.format(this.leavingDate);
-    console.log("leavingDate assigned with value "+this.visit.leavingDate);
   }
   public assignEntranceDate():void{
     this.visit.entranceDate = this.formatter.format(this.entranceDate);
-    console.log("entranceDate assigned with value "+this.visit.entranceDate);
   }
   public addVisit():void {
     this.visit.place = this.placeService.getCurrentPlace();

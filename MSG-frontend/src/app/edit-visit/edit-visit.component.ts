@@ -1,6 +1,7 @@
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { NgbDatepickerI18n, NgbDateStruct, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateITParserFormatter } from "../data/ngb-date-it-parser-formatter"
 
 import { I18n, CustomDatepickerI18n } from '../data/datepicker_IT';
 import { VisitEventService } from '../visit-event.service';
@@ -8,15 +9,22 @@ import { VisitService } from '../visit.service';
 import { PlaceService } from '../place.service';
 import { Visit } from '../model/visit';
 import { DOCUMENT_TYPES } from '../data/document_types';
+
 const now = new Date();
 
 @Component({
   selector: 'app-edit-visit',
   templateUrl: './edit-visit.component.html',
   styleUrls: ['./edit-visit.component.css'],
-  providers: [I18n, { provide: NgbDatepickerI18n, useClass: CustomDatepickerI18n }]
+  providers: [
+              I18n,
+              { provide: NgbDateParserFormatter, useClass: NgbDateITParserFormatter },
+              { provide: NgbDatepickerI18n, useClass: CustomDatepickerI18n }
+            ]
 })
 export class EditVisitComponent implements OnInit {
+  public isBadgeAssigned:boolean;
+  public isEntranceDateAssigned:boolean;
   private showLeavingDate:boolean = false;
   private entranceDate:NgbDateStruct;
   private leavingDate:NgbDateStruct;
@@ -38,10 +46,8 @@ export class EditVisitComponent implements OnInit {
   public ngOnInit() {
     this.visit = new Visit();
     this.resetDates();
-
     this.visitEventService.showEditFormEvent.subscribe(show => {
       this.open(this.content);
-      // this.modalRef = this.modalService.show(this.template);
     });
 
     this.visitEventService.editVisitChangedEvent.subscribe(visit => {
@@ -53,6 +59,9 @@ export class EditVisitComponent implements OnInit {
     });
   }
   public open(content) {
+    this.isBadgeAssigned = this.visit.badgeNo!=null;
+    this.isEntranceDateAssigned=this.visit.entranceDate!=null;
+
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
         this.closeResult = `Closed with: ${result}`;
       }, (reason) => {
@@ -98,11 +107,9 @@ export class EditVisitComponent implements OnInit {
   }
   public assignLeavinDate():void{
     this.visit.leavingDate = this.formatter.format(this.leavingDate);
-    console.log("leavingDate assigned with value "+this.visit.leavingDate);
   }
   public assignEntranceDate():void{
     this.visit.entranceDate = this.formatter.format(this.entranceDate);
-    console.log("entranceDate assigned with value "+this.visit.entranceDate);
   }
   public editVisit():void {
     this.visit.place = this.placeService.getCurrentPlace();
