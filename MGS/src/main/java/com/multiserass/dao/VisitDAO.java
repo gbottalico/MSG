@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.multiserass.entity.Visit;
-import com.multiserass.utils.DateUtils;
 
 @Transactional
 @Repository
@@ -71,7 +70,6 @@ public class VisitDAO implements IVisitDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Visit> getAllVisitByPlaceAndDate(Integer placeId, LocalDate date) {
-		String dateStr = DateUtils.toString(date, "yyyy-MM-dd");
 		String hql = "FROM Visit as visit "
 				+ "WHERE visit.place.id="+placeId+" "
 				+ "AND visit.entranceDate= '"+date+"' "
