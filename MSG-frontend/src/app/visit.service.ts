@@ -14,7 +14,7 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
-export class VisitService implements OnInit{
+export class VisitService {
   private visitUrl = BACKEND_URL+'/api/visit';
   private visitsUrl = BACKEND_URL+'/api/visits';
   private visitsByPlaceAndNameUrl = BACKEND_URL+'/api/visit_by_place_and_name';
@@ -25,8 +25,6 @@ export class VisitService implements OnInit{
     private datePipe: DatePipe
   ) { }
 
-  ngOnInit(){
-  }
   getVisits(): Observable<Visit[]> {
     return this.http.get<Visit[]>(this.visitsUrl)
       .pipe(
