@@ -2,7 +2,7 @@
 
 <ng-template #content>
   <div class="modal-header">
-    <h4 class="modal-title pull-left">Modifica Visita</h4>
+    <h4 class="modal-title pull-left">Crea Visita</h4>
   </div>
   <div class="modal-body">
     <form #visitForm="ngForm">
@@ -13,7 +13,7 @@
               <div class="input-group">
                 <input class="form-control" placeholder="Data entrata.."
                        name="dp" [(ngModel)]="entranceDate" ngbDatepicker #d="ngbDatepicker"
-                       (click)="assignEntranceDate()">
+                       (ngModelChange)="assignEntranceDate()">
                 <div class="input-group-append">
                   <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
                     <span class="glyphicon glyphicon-calendar"></span>
@@ -26,7 +26,7 @@
             <input id="guestName" name="guestName" class="form-control"
                    required appForbidden=".*[-\/\\^%$*+£?&.()|[\]{}].*"
                    [(ngModel)]="visit.guestName" #guestName="ngModel"
-                   placeholder="Persona visitata..">
+                   placeholder="Nome ospite..">
 
             <div *ngIf="guestName.invalid && (guestName.dirty || guestName.touched)" class="alert alert-danger">
               <div *ngIf="guestName.errors.required">Nome ospite obbligatorio</div>
@@ -38,16 +38,16 @@
             <input id="hostName" name="hostName" class="form-control"
                    required appForbidden=".*[-\/\\^%$*+£?&.()|[\]{}].*"
                    [(ngModel)]="visit.hostName" #hostName="ngModel"
-                   placeholder="Persona da visitare..">
+                   placeholder="Nome persona visitata..">
 
             <div *ngIf="hostName.invalid && (hostName.dirty || hostName.touched)" class="alert alert-danger">
-              <div *ngIf="hostName.errors.required">Nome ospitante obbligatorio</div>
+              <div *ngIf="hostName.errors.required">Nome persona visitata obbligatorio</div>
               <div *ngIf="hostName.errors.forbidden">Un nome non può contenere caratteri speciali</div>
             </div>
           </div>
           <div class="form-group">
             <input id="socialReason" name="socialReason" class="form-control"
-                   required appForbidden=".*[-\/\\^%$*+£?&.()|[\]{}].*"
+                   appForbidden=".*[-\/\\^%$*+£?&.()|[\]{}].*"
                    [(ngModel)]="visit.socialReason" #socialReason="ngModel"
                    placeholder="Ragione sociale..">
 
@@ -92,7 +92,8 @@
                     <div class="input-group">
                       <input class="form-control" placeholder="Data uscita.."
                              name="dp" [(ngModel)]="leavingDate"
-                             (click)="assignLeavingDate()"  ngbDatepicker #d="ngbDatepicker">
+                             (ngModelChange)="assignLeavinDate()"  ngbDatepicker #d="ngbDatepicker">
+
                       <div class="input-group-append">
                         <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
                           <span class="glyphicon glyphicon-calendar"></span>
@@ -100,11 +101,14 @@
                       </div>
                     </div>
                   </form>
+                  <div class="alert alert-danger" *ngIf="comparableEntranceDate>comparableLeavingDate">
+                    La data di entrata non può essere minore alla data di uscita
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <button type="submit" class="plus-button btn btn-sm btn-outline-primary mr-2" (click)="addVisit()" [disabled]="visitForm.invalid">Crea</button>
+          <button type="submit" class="plus-button btn btn-sm btn-outline-primary mr-2" (click)="addVisit()" [disabled]="visitForm.invalid || comparableEntranceDate>comparableLeavingDate">Crea</button>
         </div>
       </div>
       <div class="submitted-message" *ngIf="visitForm.submitted">
@@ -113,7 +117,3 @@
     </form>
   </div>
 </ng-template>
-
-<div *ngIf="show"  class="container">
-
-</div>

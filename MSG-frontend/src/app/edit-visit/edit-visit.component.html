@@ -11,11 +11,10 @@
         <div class="cross-validation" [class.cross-validation-error]="visitForm.errors?.identityRevealed && (visitForm.touched || visitForm.dirty)">
           <div class="form-group">
             <input id="badgeNo" name="badgeNo" class="form-control"
-                   [disabled]="isBadgeAssigned"
+                   [disabled]="isBadgeAssigned || isLeavingTimeAssigned"
                    required [(ngModel)]="visit.badgeNo" #badgeNo="ngModel"
                    placeholder="Numero Badge..">
-<!--  -->
-            <div *ngIf="badgeNo.invalid && (badgeNo.dirty || badgeNo.touched)" class="alert alert-danger">
+            <div *ngIf="badgeNo.invalid" class="alert alert-danger">
               <div *ngIf="badgeNo.errors.required">Numero badge obbligatorio</div>
             </div>
           </div>
@@ -23,7 +22,7 @@
             <form class="form-inline">
               <div class="input-group">
                 <input class="form-control" placeholder="Data entrata.."
-                       [disabled]="visit.entranceDate"
+                       [disabled]="visit.entranceDate || isLeavingTimeAssigned"
                        name="dp" [(ngModel)]="entranceDate" ngbDatepicker #d="ngbDatepicker"
                        (click)="assignEntranceDate()">
                 <div class="input-group-append">
@@ -36,11 +35,12 @@
           </div>
           <div class="form-group">
             <input id="guestName" name="guestName" class="form-control"
+                   [disabled]="isGuestNameAssigned || isLeavingTimeAssigned"
                    required appForbidden=".*[-\/\\^%$*+£?&.()|[\]{}].*"
                    [(ngModel)]="visit.guestName" #guestName="ngModel"
-                   placeholder="Persona visitata..">
+                   placeholder="Nome ospite..">
 
-            <div *ngIf="guestName.invalid && (guestName.dirty || guestName.touched)" class="alert alert-danger">
+            <div *ngIf="guestName.invalid" class="alert alert-danger">
               <div *ngIf="guestName.errors.required">Nome ospite obbligatorio</div>
               <div *ngIf="guestName.errors.forbidden">Un nome non può contenere caratteri speciali</div>
             </div>
@@ -48,22 +48,24 @@
 
           <div class="form-group">
             <input id="hostName" name="hostName" class="form-control"
+                   [disabled]="isHostNameAssigned || isLeavingTimeAssigned"
                    required appForbidden=".*[-\/\\^%$*+£?&.()|[\]{}].*"
                    [(ngModel)]="visit.hostName" #hostName="ngModel"
-                   placeholder="Persona da visitare..">
+                   placeholder="Nome persona visitata..">
 
-            <div *ngIf="hostName.invalid && (hostName.dirty || hostName.touched)" class="alert alert-danger">
-              <div *ngIf="hostName.errors.required">Nome ospitante obbligatorio</div>
+            <div *ngIf="hostName.invalid" class="alert alert-danger">
+              <div *ngIf="hostName.errors.required">Nome persona visitata obbligatorio</div>
               <div *ngIf="hostName.errors.forbidden">Un nome non può contenere caratteri speciali</div>
             </div>
           </div>
           <div class="form-group">
             <input id="socialReason" name="socialReason" class="form-control"
-                   required appForbidden=".*[-\/\\^%$*+£?&.()|[\]{}].*"
+                   [disabled]="isLeavingTimeAssigned"
+                   appForbidden=".*[-\/\\^%$*+£?&.()|[\]{}].*"
                    [(ngModel)]="visit.socialReason" #socialReason="ngModel"
                    placeholder="Ragione sociale..">
 
-            <div *ngIf="socialReason.invalid && (socialReason.dirty || socialReason.touched)" class="alert alert-danger">
+            <div *ngIf="socialReason.invalid" class="alert alert-danger">
               <div *ngIf="socialReason.errors.required">Ragione sociale obbligatora</div>
               <div *ngIf="socialReason.errors.forbidden">Non può contenere caratteri speciali</div>
             </div>
@@ -72,19 +74,21 @@
             <div class="row">
               <div class="col-sm">
                 <input id="entranceTime" name="entranceTime" class="form-control"
+                       [disabled]="isEntranceTimeAssigned || isLeavingTimeAssigned"
                        pattern="^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"
                        [(ngModel)]="visit.entranceTime" #entranceTime="ngModel"
                        placeholder="Orario entrata..">
-                <div *ngIf="entranceTime.invalid && (entranceTime.dirty || entranceTime.touched)" class="alert alert-danger">
+                <div *ngIf="entranceTime.invalid" class="alert alert-danger">
                  <div *ngIf="entranceTime.errors.pattern">L'orario deve essere nel formato HH:MM</div>
                 </div>
               </div>
               <div class="col-sm">
                 <input id="leavingTime" name="leavingTime" class="form-control"
+                       [disabled]="isLeavingTimeAssigned"
                        pattern="^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"
                        [(ngModel)]="visit.leavingTime" #leavingTime="ngModel"
                        placeholder="Orario uscita..">
-                <div *ngIf="leavingTime.invalid && (leavingTime.dirty || leavingTime.touched)" class="alert alert-danger">
+                <div *ngIf="leavingTime.invalid || (visit.entranceDate>visit.leavingDate)" class="alert alert-danger">
                   <div *ngIf="leavingTime.errors.pattern">L'orario deve essere nel formato HH:MM</div>
                 </div>
               </div>
@@ -95,6 +99,7 @@
               <div class="col-sm">
                 <div class="dropdown">
                   <button class="btn btn-primary dropdown-toggle form-control" type="button" id="dropdownMenuButton"
+                          [disabled]="isLeavingTimeAssigned"
                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{documentLabel}}
                   </button>
@@ -106,6 +111,7 @@
               </div>
               <div class="col-sm">
                 <input *ngIf="visit.guestDocumentType" id="guestDocumentNo" name="guestDocumentNo" class="form-control"
+                       [disabled]="isLeavingTimeAssigned"
                        [(ngModel)]="visit.guestDocumentNo" #guestDocumentNo="ngModel"
                        placeholder="Numero documento..">
               </div>
@@ -121,7 +127,3 @@
     </form>
   </div>
 </ng-template>
-
-<div *ngIf="show"  class="container">
-
-</div>

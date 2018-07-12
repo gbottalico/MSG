@@ -1,15 +1,15 @@
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { NgbDatepickerI18n, NgbDateStruct, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateITParserFormatter } from "../data/ngb-date-it-parser-formatter"
 
 import { I18n, CustomDatepickerI18n } from '../data/datepicker_IT';
 import { VisitEventService } from '../visit-event.service';
 import { VisitService } from '../visit.service';
 import { PlaceService } from '../place.service';
+import { DatepickerService } from '../datepicker.service';
 import { Visit } from '../model/visit';
 import { DOCUMENT_TYPES } from '../data/document_types';
-const now = new Date();
 
 @Component({
   selector: 'app-new-visit',
@@ -29,7 +29,9 @@ export class NewVisitComponent implements OnInit {
   private documentLabel = 'Tipo Documento';
   private visit:Visit;
   private closeResult: string;
-
+  private currentDate:Date;
+  private comparableLeavingDate:Date;
+  private comparableEntranceDate:Date;
 
   @ViewChild('content') private content;
 
@@ -38,7 +40,8 @@ export class NewVisitComponent implements OnInit {
     private visitService: VisitService,
     private placeService: PlaceService,
     private formatter: NgbDateParserFormatter,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private datepickerService:DatepickerService
   ) { }
 
   public ngOnInit() {
@@ -47,7 +50,7 @@ export class NewVisitComponent implements OnInit {
 
     this.visitEventService.showNewFormEvent.subscribe(show => {
       this.resetVisit();
-      this.openEdit(this.content);
+      this.openPopulated(this.content);
     });
 
     this.visitEventService.newVisitChangedEvent.subscribe(visit => {
@@ -64,6 +67,7 @@ export class NewVisitComponent implements OnInit {
   }
   public open(content) {
     this.reset()
+
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'})
       .result.then((result) => {
         this.closeResult = `Closed with: ${result}`;
@@ -71,7 +75,8 @@ export class NewVisitComponent implements OnInit {
         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
       });
   }
-  public openEdit(content) {
+  public openPopulated(content) {
+
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
         this.closeResult = `Closed with: ${result}`;
       }, (reason) => {
@@ -105,8 +110,8 @@ export class NewVisitComponent implements OnInit {
     this.resetDates();
   }
   public resetDates():void {
-    this.leavingDate = {year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate()};
-    this.entranceDate = {year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate()};
+    this.leavingDate = {year: this.datepickerService.getCurrentDate().getFullYear(), month: this.datepickerService.getCurrentDate().getMonth() + 1, day: this.datepickerService.getCurrentDate().getDate()};
+    this.entranceDate = {year: this.datepickerService.getCurrentDate().getFullYear(), month: this.datepickerService.getCurrentDate().getMonth() + 1, day: this.datepickerService.getCurrentDate().getDate()};
     this.assignLeavinDate();
     this.assignEntranceDate();
   }
@@ -115,10 +120,19 @@ export class NewVisitComponent implements OnInit {
     this.assignLeavinDate();
   }
   public assignLeavinDate():void{
+    this.comparableLeavingDate = new Date(this.leavingDate.year, this.leavingDate.month - 1, this.leavingDate.day);
+    console.log(this.comparableEntranceDate);
+    console.log(this.comparableLeavingDate);
+    console.log(this.comparableEntranceDate>this.comparableLeavingDate);
     this.visit.leavingDate = this.formatter.format(this.leavingDate);
   }
   public assignEntranceDate():void{
+    this.comparableEntranceDate = new Date(this.entranceDate.year, this.entranceDate.month - 1, this.entranceDate.day);
+    console.log(this.comparableEntranceDate);
+    console.log(this.comparableLeavingDate);
+    console.log(this.comparableEntranceDate>this.comparableLeavingDate);
     this.visit.entranceDate = this.formatter.format(this.entranceDate);
+
   }
   public addVisit():void {
     this.visit.place = this.placeService.getCurrentPlace();

@@ -23,8 +23,13 @@ const now = new Date();
             ]
 })
 export class EditVisitComponent implements OnInit {
+  public isEntranceTimeAssigned:boolean;
+  public isHostNameAssigned:boolean;
+  public isGuestNameAssigned:boolean;
   public isBadgeAssigned:boolean;
   public isEntranceDateAssigned:boolean;
+  public isLeavingTimeAssigned:boolean;
+
   private showLeavingDate:boolean = false;
   private entranceDate:NgbDateStruct;
   private leavingDate:NgbDateStruct;
@@ -61,6 +66,10 @@ export class EditVisitComponent implements OnInit {
   public open(content) {
     this.isBadgeAssigned = this.visit.badgeNo!=null;
     this.isEntranceDateAssigned=this.visit.entranceDate!=null;
+    this.isLeavingTimeAssigned=this.visit.leavingTime!=null;
+    this.isEntranceTimeAssigned=this.visit.entranceTime!=null;
+    this.isHostNameAssigned=this.visit.hostName!=null;
+    this.isGuestNameAssigned=this.visit.guestName!=null;
 
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
         this.closeResult = `Closed with: ${result}`;
