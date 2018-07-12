@@ -1,6 +1,6 @@
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { NgbDatepickerI18n, NgbDateStruct, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateITParserFormatter } from "../data/ngb-date-it-parser-formatter"
 
 import { I18n, CustomDatepickerI18n } from '../data/datepicker_IT';
@@ -22,6 +22,7 @@ import { DOCUMENT_TYPES } from '../data/document_types';
             ]
 })
 export class NewVisitComponent implements OnInit {
+  public mr: NgbModalRef;
   private showLeavingDate:boolean = false;
   private entranceDate:NgbDateStruct;
   private leavingDate:NgbDateStruct;
@@ -67,21 +68,13 @@ export class NewVisitComponent implements OnInit {
   }
   public open(content) {
     this.reset()
-
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'})
-      .result.then((result) => {
-        this.closeResult = `Closed with: ${result}`;
-      }, (reason) => {
-        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      });
+    this.openPopulated(content);
   }
   public openPopulated(content) {
-
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-        this.closeResult = `Closed with: ${result}`;
-      }, (reason) => {
-        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      });
+    this.mr = this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'});
+  }
+  public close(){
+    this.mr.close();
   }
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
