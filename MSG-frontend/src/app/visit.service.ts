@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
+import { BACKEND_URL } from './data/backend_url';
 import { Visit } from './model/visit';
-import { BE_URL } from './data/be_url';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -14,17 +14,19 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
-export class VisitService {
-  private visitUrl = BE_URL+'/api/visit';
-  private visitsUrl = BE_URL+'/api/visits';
-  private visitsByPlaceAndNameUrl = BE_URL+'/api/visit_by_place_and_name';
-  private visitsByPlaceAndDateUrl = BE_URL+'/api/visit_by_place_and_date';
+export class VisitService implements OnInit{
+  private visitUrl = BACKEND_URL+'/api/visit';
+  private visitsUrl = BACKEND_URL+'/api/visits';
+  private visitsByPlaceAndNameUrl = BACKEND_URL+'/api/visit_by_place_and_name';
+  private visitsByPlaceAndDateUrl = BACKEND_URL+'/api/visit_by_place_and_date';
 
   constructor(
     private http: HttpClient,
     private datePipe: DatePipe
   ) { }
 
+  ngOnInit(){
+  }
   getVisits(): Observable<Visit[]> {
     return this.http.get<Visit[]>(this.visitsUrl)
       .pipe(

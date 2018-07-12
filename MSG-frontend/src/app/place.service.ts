@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
 
+import { BACKEND_URL } from './data/backend_url';
 import { Place } from './model/place';
-import { BE_URL } from './data/be_url';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -14,15 +14,18 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
-export class PlaceService {
-  private placeUrl = BE_URL+'/api/place';
-  private placesUrl = BE_URL+'/api/places';
+export class PlaceService implements OnInit{
+  private placeUrl = BACKEND_URL+'/api/place';
+  private placesUrl = BACKEND_URL+'/api/places';
   private currentPlace:Place;
 
   constructor(
     private http: HttpClient,
     private cookieService: CookieService
   ) { }
+
+  ngOnInit(){
+  }
   setCurrentPlace(place: Place):void {
     this.cookieService.set( 'msg.currentPlace', ""+place.id);
     this.currentPlace = place;
