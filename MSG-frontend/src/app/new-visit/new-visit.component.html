@@ -111,7 +111,7 @@
               </div>
             </div>
           </div>
-          <button type="submit" class="plus-button btn btn-sm btn-outline-primary mr-2" (click)="addVisit()" [disabled]="visitForm.invalid || comparableEntranceDate>comparableLeavingDate">Crea</button>
+          <button type="submit" class="plus-button btn btn-sm btn-outline-primary mr-2" (click)="addVisit()" [disabled]="visitForm.invalid || (showLeavingDate && comparableEntranceDate>comparableLeavingDate)">Crea</button>
         </div>
       </div>
       <div class="submitted-message" *ngIf="visitForm.submitted">
