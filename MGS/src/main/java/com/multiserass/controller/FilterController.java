@@ -17,7 +17,7 @@ import com.multiserass.entity.Visit;
 import com.multiserass.service.IVisitService;
 
 @Controller
-@CrossOrigin(origins = Constants.CROSS_ORIGIN_URL, maxAge=86400)
+@CrossOrigin
 @RequestMapping("api")
 public class FilterController {
 	@Autowired

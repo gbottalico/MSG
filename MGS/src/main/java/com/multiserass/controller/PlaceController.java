@@ -21,7 +21,7 @@ import com.multiserass.entity.Place;
 import com.multiserass.service.IPlaceService;
 
 @Controller
-@CrossOrigin(origins = Constants.CROSS_ORIGIN_URL)
+@CrossOrigin
 @RequestMapping("api")
 public class PlaceController {
 	@Autowired

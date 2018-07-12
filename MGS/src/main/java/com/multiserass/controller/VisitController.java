@@ -21,7 +21,7 @@ import com.multiserass.entity.Visit;
 import com.multiserass.service.IVisitService;
 
 @Controller
-@CrossOrigin(origins = Constants.CROSS_ORIGIN_URL)
+@CrossOrigin
 @RequestMapping("api")
 public class VisitController {
 	public static final String FORMAT = "dd-MM-yyyy";
