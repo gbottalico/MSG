@@ -7,12 +7,16 @@ export class DatepickerService {
 
   constructor() { }
 
-  date: Date = new Date();
+  private date: Date = new Date();
 
   @Output() change: EventEmitter<Date> = new EventEmitter();
 
   bind(date:Date) {
     this.date = date;
     this.change.emit(this.date);
+  }
+
+  getCurrentDate():Date{
+    return this.date;
   }
 }
