@@ -104,4 +104,7 @@ export class DashboardComponent implements OnInit {
         }
      );
   }
+  refresh():void{
+    this.getVisitsFromDate();
+  }
 }
