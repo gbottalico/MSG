@@ -1,4 +1,0 @@
-ioc: null
-server:
-  contextPath: /mgs
-  port: 8080
