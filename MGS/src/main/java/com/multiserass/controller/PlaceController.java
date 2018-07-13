@@ -8,13 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.multiserass.entity.Place;
@@ -27,17 +24,17 @@ public class PlaceController {
 	@Autowired
 	private IPlaceService placeService;
 	
-	@GetMapping("place/{id}")
+	@RequestMapping("place/{id}")
 	public ResponseEntity<Place> getPlaceById(@PathVariable("id") Integer id) {
 		Place place = placeService.getPlaceById(id);
 		return new ResponseEntity<Place>(place, HttpStatus.OK);
 	}
-	@GetMapping("places")
+	@RequestMapping("places")
 	public ResponseEntity<List<Place>> getAllPlaces() {
 		List<Place> list = placeService.getAllPlaces();
 		return new ResponseEntity<List<Place>>(list, HttpStatus.OK);
 	}
-	@PostMapping("place")
+	@RequestMapping(value="place", method=RequestMethod.POST )
 	public ResponseEntity<Void> addPlace(@RequestBody Place place, UriComponentsBuilder builder) {
         boolean flag = placeService.addPlace(place);
         if (flag == false) {
@@ -47,12 +44,12 @@ public class PlaceController {
         headers.setLocation(builder.path("/place/{id}").buildAndExpand(place.getId()).toUri());
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
-	@PutMapping("place")
+	@RequestMapping(value="place", method=RequestMethod.PUT )
 	public ResponseEntity<Place> updatePlace(@RequestBody Place place) {
 		placeService.updatePlace(place);
 		return new ResponseEntity<Place>(place, HttpStatus.OK);
 	}
-	@DeleteMapping("place/{id}")
+	@RequestMapping(value="place/{id}", method=RequestMethod.DELETE )
 	public ResponseEntity<Void> deletePlace(@PathVariable("id") Integer id) {
 		placeService.deletePlace(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);

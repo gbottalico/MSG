@@ -6,7 +6,7 @@
 	<groupId>com.multiserass</groupId>
 	<artifactId>mgs</artifactId>
 	<version>0.2</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>MGS</name>
 	<description>Msa Gesione Visitatori</description>
@@ -14,8 +14,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.3.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<version>1.5.14.RELEASE</version>
 	</parent>
 
 	<properties>
@@ -28,10 +27,21 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+					<groupId>org.springframework.boot</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -44,13 +54,14 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 
 	<build>
+		<finalName>msg</finalName>
 		<resources>
 			<resource>
 				<directory>src/main/resources/</directory>
@@ -65,5 +76,15 @@
 		</plugins>
 	</build>
 
-
+	<profiles>
+		<profile>
+			<id>locale</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<env>locale</env>
+			</properties>
+		</profile>
+	</profiles>
 </project>
