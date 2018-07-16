@@ -17,8 +17,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.multiserass.entity.Visit;
 import com.multiserass.service.IVisitService;
 
-@Controller
 @CrossOrigin
+@Controller
 @RequestMapping("api")
 public class VisitController {
 	public static final String FORMAT = "dd-MM-yyyy";
