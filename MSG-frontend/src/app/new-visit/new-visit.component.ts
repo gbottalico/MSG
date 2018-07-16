@@ -33,6 +33,7 @@ export class NewVisitComponent implements OnInit {
   private currentDate:Date;
   private comparableLeavingDate:Date;
   private comparableEntranceDate:Date;
+  private resultMessage:string = "Errore nell'aggiunta della visita";
 
   @ViewChild('content') private content;
 
@@ -128,10 +129,16 @@ export class NewVisitComponent implements OnInit {
 
   }
   public addVisit():void {
+    this.resultMessage = "Errore nell'aggiunta della visita";
     this.visit.place = this.placeService.getCurrentPlace();
     this.visit.entranceDate = this.formatter.format(this.entranceDate);
     this.visit.leavingDate = this.formatter.format(this.leavingDate);
-    this.visitService.addVisit(this.visit).subscribe();
-    this.visitEventService.visitCreated(this.visit);
+    this.visitService.addVisit(this.visit)
+        .subscribe(() => {
+          this.visitEventService.visitCreated(this.visit);
+          this.resultMessage = "Visita aggiunta con successo!",
+          (err) => this.resultMessage = "Errore nell'aggiunta della visita"
+        });
+
   }
 }

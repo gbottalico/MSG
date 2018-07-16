@@ -29,7 +29,6 @@ export class EditVisitComponent implements OnInit {
   public isBadgeAssigned:boolean;
   public isEntranceDateAssigned:boolean;
   public isLeavingTimeAssigned:boolean;
-
   public mr: NgbModalRef;
   private showLeavingDate:boolean = false;
   private entranceDate:NgbDateStruct;
@@ -38,6 +37,7 @@ export class EditVisitComponent implements OnInit {
   private documentLabel = 'Tipo Documento';
   private visit:Visit;
   private closeResult: string;
+  private resultMessage: string;
 
   @ViewChild('content') private content;
 
@@ -121,9 +121,16 @@ export class EditVisitComponent implements OnInit {
     this.visit.entranceDate = this.formatter.format(this.entranceDate);
   }
   public editVisit():void {
+    this.resultMessage = "Errore nell'aggiunta della visita";
     this.visit.place = this.placeService.getCurrentPlace();
     this.visit.entranceDate = this.formatter.format(this.entranceDate);
     this.visit.leavingDate = this.formatter.format(this.leavingDate);
-    this.visitService.updateVisit(this.visit).subscribe();
+
+    this.visitService.updateVisit(this.visit)
+        .subscribe(() => {
+          this.resultMessage = "Visita aggiunta con successo!",
+          (err) => this.resultMessage = "Errore nell'aggiunta della visita"
+        });
+
   }
 }

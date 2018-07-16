@@ -51,11 +51,7 @@ export class VisitService {
   }
 
   addVisit (visit: Visit): Observable<any> {
-    return this.http.post<Visit>(this.visitUrl, visit, httpOptions)
-      .pipe(
-        tap(_ => this.log(`added visit`)),
-        catchError(this.handleError<Visit>(`addVisit`))
-      );
+    return this.http.post<Visit>(this.visitUrl, visit, httpOptions);
   }
 
   deleteVisit (visit: Visit | number): Observable<Visit> {
