@@ -1,4 +1,5 @@
-# Software requirements
+#Msa Gesione Visitatori
+## Software requirements
 
 1. Tomcat 8.5 o successive
 2. Apache
@@ -28,6 +29,6 @@ Il backend REST sará raggiungibile all'indirizzo
 ```
 var BACKEND_URL = 'http://localhost:8080/msg';
 ```
-2. Sostituire nel file [MSG-frontend/dist/main.js.map](https://github.com/gbottalico/MSG/blob/master/MSG-frontend/dist/MSG-frontend/main.js.map) l'indirizzo IP del server come fatto al passo 1 (Attenzione! Questo file è compattato in una sola riga. È consigliabile usare Ctrl+F per cercare la stringa 'localhost:8080' e sostituirla con l'indirizzo IP del server).
+2. Sostituire nel file [MSG-frontend/dist/main.js.map](https://github.com/gbottalico/MSG/blob/master/MSG-frontend/dist/MSG-frontend/main.js.map) l'indirizzo IP del server come fatto al passo 1 (*Attenzione!* Questo file è compattato in una sola riga. È consigliabile usare Ctrl+F per cercare la stringa 'localhost:8080' e sostituirla con l'indirizzo IP del server).
 
 3. Copiare il contenuto della cartella [MSG-frontend/dist](https://github.com/gbottalico/MSG/tree/master/MSG-frontend/dist) nella cartella {APACHE_HOME}/htdocs ed accedere alla Web Application.
